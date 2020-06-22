@@ -28,10 +28,11 @@
 #endif
 
 #define DEFAULT_MACHINE_NAME "STM32F446VET6"
-#define BOARD_INFO_NAME      "STM32F4 VAkE"
+#define BOARD_NAME           "STM32F4 VAkE"
 
 //#define I2C_EEPROM
-#define MARLIN_EEPROM_SIZE 0x1000                 // 4KB
+
+#define E2END 0xFFF                               // EEPROM end address (4kB)
 
 //
 // Servos
@@ -134,9 +135,7 @@
 #define FAN1_PIN                            PB5   // PA0
 #define FAN2_PIN                            PB4   // PA1
 
-#ifndef E0_AUTO_FAN_PIN
-  #define E0_AUTO_FAN_PIN                   PD13
-#endif
+#define ORIG_E0_AUTO_FAN_PIN                PD13  // Use this by NOT overriding E0_AUTO_FAN_PIN
 
 //
 // Misc. Functions

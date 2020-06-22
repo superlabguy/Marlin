@@ -209,8 +209,7 @@ class CachedScreen {
 
       if (dlcache.has_data()) {
         dlcache.append();
-      }
-      else {
+      } else {
         #ifdef TOUCH_UI_USE_UTF8
           load_utf8_bitmaps(cmd);
         #endif

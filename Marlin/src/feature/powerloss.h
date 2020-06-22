@@ -36,7 +36,7 @@
   #define POWER_LOSS_STATE HIGH
 #endif
 
-//#define DEBUG_POWER_LOSS_RECOVERY
+#define DEBUG_POWER_LOSS_RECOVERY
 //#define SAVE_EACH_CMD_MODE
 //#define SAVE_INFO_INTERVAL_MS 0
 
@@ -61,10 +61,14 @@ typedef struct {
 
   #if DISABLED(NO_VOLUMETRICS)
     bool volumetric_enabled;
-    float filament_size[EXTRUDERS];
+    #if EXTRUDERS > 1
+      float filament_size[EXTRUDERS];
+    #else
+      float filament_size;
+    #endif
   #endif
 
-  #if HAS_HOTEND
+  #if HOTENDS
     int16_t target_temperature[HOTENDS];
   #endif
 
@@ -72,7 +76,7 @@ typedef struct {
     int16_t target_temperature_bed;
   #endif
 
-  #if HAS_FAN
+  #if FAN_COUNT
     uint8_t fan_speed[FAN_COUNT];
   #endif
 
@@ -106,8 +110,6 @@ typedef struct {
 
   uint8_t valid_foot;
 
-  bool valid() { return valid_head && valid_head == valid_foot; }
-
 } job_recovery_info_t;
 
 class PrintJobRecovery {
@@ -120,10 +122,6 @@ class PrintJobRecovery {
     static uint8_t queue_index_r;     //!< Queue index of the active command
     static uint32_t cmd_sdpos,        //!< SD position of the next command
                     sdpos[BUFSIZE];   //!< SD positions of queued commands
-
-    #if ENABLED(DWIN_CREALITY_LCD)
-      static bool dwin_flag;
-    #endif
 
     static void init();
     static void prepare();
@@ -170,7 +168,7 @@ class PrintJobRecovery {
     }
   #endif
 
-  static inline bool valid() { return info.valid(); }
+  static inline bool valid() { return info.valid_head && info.valid_head == info.valid_foot; }
 
   #if ENABLED(DEBUG_POWER_LOSS_RECOVERY)
     static void debug(PGM_P const prefix);
